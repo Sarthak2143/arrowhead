@@ -1,4 +1,4 @@
-module example.com/pwd
+module arrowhead
 
 go 1.18
 

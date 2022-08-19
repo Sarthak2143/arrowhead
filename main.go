@@ -17,7 +17,7 @@ func main() {
     }
     // creating the db
     db.Update(func (tx *bolt.Tx) error {
-        _, err := tx.CreateBucket([]byte("Passwords"))
+        _, err := tx.CreateBucket([]byte("Arrowhead"))
         if err != nil {
             return fmt.Errorf("create bucket %s",err)
         }
@@ -25,13 +25,13 @@ func main() {
     })
     // updating db
     db.Update(func (tx *bolt.Tx) error {
-        b := tx.Bucket([]byte("MyBucket"))
+        b := tx.Bucket([]byte("Arrowhead"))
         err := b.Put([]byte("Username"), []byte("Password"))
         return err
     })
     // getting value from db
     db.View(func (tx *bolt.Tx) error {
-        b := tx.Bucket([]byte("Passwords"))
+        b := tx.Bucket([]byte("Arrowhead"))
         v := b.Get([]byte("Username"))
         fmt.Printf("%s", v)
         return nil
