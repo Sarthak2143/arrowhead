@@ -5,24 +5,28 @@ import (
     "log"
     "example.com/password"
     "github.com/boltdb/bolt"
-    //"time"
 )
 
 func main() {
-    fmt.Println(password.Get_pwd())
+    err := password.Put_pwd("Test", "Pa55word")
+    if err != nil {
+        log.Fatal(err)
+    }
+    pwd := password.Get_pwd("Test")
+    fmt.Println(pwd)
     // opening db
     db, err := bolt.Open("data.db", 0600, nil)
     if err != nil {
         log.Fatal(err)
     }
     // creating the db
-    db.Update(func (tx *bolt.Tx) error {
-        _, err := tx.CreateBucket([]byte("Arrowhead"))
-        if err != nil {
-            return fmt.Errorf("create bucket %s",err)
-        }
-        return nil
-    })
+//    db.Update(func (tx *bolt.Tx) error {
+//        _, err := tx.CreateBucket([]byte("Arrowhead"))
+//        if err != nil {
+//            return fmt.Errorf("create bucket %s",err)
+//        }
+//        return nil
+//    })
     // updating db
     db.Update(func (tx *bolt.Tx) error {
         b := tx.Bucket([]byte("Arrowhead"))
