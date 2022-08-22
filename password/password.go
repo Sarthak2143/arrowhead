@@ -7,14 +7,30 @@ import (
     bolt "go.etcd.io/bbolt"
 )
 
-func Get_pwd(email string) string {
-    if err := create_bucket(); err != nil {
-        log.Fatal(err)
-    }
-    return email + "test"
+func Get_pwd(email string) ([]uint8, error) {
+    db := open_db()
+    var v []uint8
+    err := db.View(func (tx *bolt.Tx) error {
+        b := tx.Bucket([]byte("Arrowhead"))
+        v = b.Get([]byte(email))
+        return nil
+    })
+    db.Close()
+    return v, err
 }
 
-func create_db() *bolt.DB {
+func Put_pwd(email, password string) error {
+    db := open_db()
+    err := db.Update(func (tx *bolt.Tx) error {
+        b := tx.Bucket([]byte("Arrowhead"))
+        err := b.Put([]byte(email), []byte(password))
+        return err
+    })
+    db.Close()
+    return err
+}
+
+func open_db() *bolt.DB {
     db, err := bolt.Open("password/password.db", 0600, &bolt.Options{
         Timeout: 1 * time.Second,
     })
@@ -25,9 +41,9 @@ func create_db() *bolt.DB {
 }
 
 func create_bucket() error {
-    db := create_db()
+    db := open_db()
     err := db.Update(func(tx *bolt.Tx) error {
-        b, err := tx.CreateBucket([]byte("Arowhead"))
+        b,err := tx.CreateBucket([]byte("Arrowhead"))
         fmt.Printf("%v\n", b)
         if err != nil {
             return fmt.Errorf("create bucket: %s", err)
