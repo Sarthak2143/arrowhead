@@ -15,6 +15,6 @@ func main() {
         log.Fatal(err)
     }
 
-    v, _ := password.Get_pwd("Test")
+    v := password.Get_pwd("Test")
     fmt.Printf("%s\n", v)
 }

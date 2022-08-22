@@ -7,7 +7,7 @@ import (
     bolt "go.etcd.io/bbolt"
 )
 
-func Get_pwd(email string) ([]uint8, error) {
+func Get_pwd(email string) []uint8 {
     db := open_db()
     var v []uint8
     err := db.View(func (tx *bolt.Tx) error {
@@ -15,8 +15,11 @@ func Get_pwd(email string) ([]uint8, error) {
         v = b.Get([]byte(email))
         return nil
     })
+    if err != nil {
+        log.Fatal(err)
+    }
     db.Close()
-    return v, err
+    return v
 }
 
 func Put_pwd(email, password string) error {
