@@ -7,14 +7,15 @@ import (
 )
 
 func main() {
-    // TODO: Implement Arrowhead.
+    // getting pwd
     pwd := password.Get_pwd("Meth")
     fmt.Println(pwd)
-    err := password.Put_pwd("Test", "pa55word")
+    // adding pwd
+    err := password.Add_pwd("Test", "pa55word")
     if err != nil {
         log.Fatal(err)
     }
-
+    // testing for our pwd
     v := password.Get_pwd("Test")
     fmt.Printf("%s\n", v)
 }

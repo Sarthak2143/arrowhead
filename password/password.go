@@ -8,21 +8,27 @@ import (
 )
 
 func Get_pwd(email string) []uint8 {
+    // opening db
     db := open_db()
     var v []uint8
+    // viewing an element from our bucket
     err := db.View(func (tx *bolt.Tx) error {
         b := tx.Bucket([]byte("Arrowhead"))
         v = b.Get([]byte(email))
         return nil
     })
     if err != nil {
+        // checking for errors
         log.Fatal(err)
     }
+    // always close db
     db.Close()
+    // returning password
     return v
 }
 
-func Put_pwd(email, password string) error {
+func Add_pwd(email, password string) error {
+    // function to add passwords in our db
     db := open_db()
     err := db.Update(func (tx *bolt.Tx) error {
         b := tx.Bucket([]byte("Arrowhead"))
@@ -34,6 +40,7 @@ func Put_pwd(email, password string) error {
 }
 
 func open_db() *bolt.DB {
+    // helper function to return an instance of db
     db, err := bolt.Open("password/password.db", 0600, &bolt.Options{
         Timeout: 1 * time.Second,
     })
@@ -44,6 +51,7 @@ func open_db() *bolt.DB {
 }
 
 func create_bucket() error {
+    // helper function to create a bucket
     db := open_db()
     err := db.Update(func(tx *bolt.Tx) error {
         b,err := tx.CreateBucket([]byte("Arrowhead"))
@@ -55,5 +63,3 @@ func create_bucket() error {
     })
     return err
 }
-
-
